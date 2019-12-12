@@ -123,7 +123,7 @@ define(function (require) {
                 };
             });
 
-            return _.sortBy(header, function(h){ return h.title.toLowerCase(); });
+            return header;
         }, this);
 
         this.filteredData = ko.computed(function () {
@@ -164,10 +164,17 @@ define(function (require) {
             }
 
             var labeledLastRow = _.zip(data.header, rows[rows.length-1].slice(1));
-            return _(labeledLastRow)
+            var selectedWikis = ['TOTAL', 'arwiki', 'cawiki', 'commonswiki', 'tawiki',
+                'enwiki', 'eswiki', 'fawiki', 'frwiki', 'wikidatawiki'];
+
+            var filteredRow = labeledLastRow.filter(function (wiki) {
+                return selectedWikis.indexOf(wiki[0]) !== -1; // -1 means not present
+            });
+
+            return _(filteredRow)
                 .sortBy(function(l) { return l[1] || Number.NEGATIVE_INFINITY; })
                 .reverse()
-                .take(5)
+                .take(10)
                 .map(function (l) { return l[0]; })
                 .value();
         }, this);
